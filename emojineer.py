@@ -17,7 +17,7 @@ convert_density = 480
 h_number = height // convert_density
 w_number = width // convert_density
 
-
+#git
 
 '''cut target img'''
 cut_target_img = []
