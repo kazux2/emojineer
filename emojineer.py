@@ -93,16 +93,10 @@ class Emojineer():
 		'''
 
 		vertical_imgs = []
-		print(nearest_emoji_name_list)
-		print(self.raws, self.column)
-		print(len(nearest_emoji_name_list))
 		for h in range(self.raws):
 			horison_imgs = []
 
 			for w in range(self.column):
-				print('concatinating emojis... {}-{}'.format(h, w))
-				print('{}/{}'.format(self.whiten_emoji_path,
-												nearest_emoji_name_list[h][w]))
 				img = cv2.imread('{}/{}'.format(self.whiten_emoji_path,
 												nearest_emoji_name_list[h][w]))
 				horison_imgs.append(img)
