@@ -1,5 +1,15 @@
 venv/*
 .DS_Store
 .idea/*
+
+
+#data directory
 data/*
+!data/emoji_apple
+data/emoji_apple/*
+!data/whiten_emoji_apple
+data/whiten_emoji_apple/*
+
+
+#output directory
 emojineer/*
