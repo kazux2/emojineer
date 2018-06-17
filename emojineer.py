@@ -87,7 +87,7 @@ class Emojineer():
 
 				for w_emoji_name in self.whiten_emoji_file_names:
 
-          root, ext = splitext(w_emoji_name)
+					root, ext = splitext(w_emoji_name)
 					if not ext in ['.png', '.jpeg', '.jpg']:
 						continue
 
