@@ -13,9 +13,16 @@ def main(target_file_name, conversion, similarities, converted_img_save_dir):
 	# nearest_emoji_name_list1, nearest_emoji_name_list2, nearest_emoji_name_list3 = emojineer.find_nearest_emojis(cut_target_img)
 	nearest_emoji_name_lists = emojineer.find_nearest_emojis(cut_target_img)
 
-	for nearest_emoji_name_list in nearest_emoji_name_lists.values():
-		print(len(nearest_emoji_name_lists))
-		emojineer.concatinate_emojis(nearest_emoji_name_list, 0, converted_img_save_dir)
+	for emoji_name, list in nearest_emoji_name_lists.items():
+		for obj in list:
+			for sim, nearest_emoji_name_list in obj.items():
+				print(sim)
+				emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
+
+	# for nearest_emoji_name_list in nearest_emoji_name_lists:
+	# 	print(len(nearest_emoji_name_lists))
+	# 	emojineer.concatinate_emojis(nearest_emoji_name_list, 0, converted_img_save_dir)
+
 	# converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list1, 0, converted_img_save_dir)
 	# converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list2, 10, converted_img_save_dir)
 	# converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list3, 20, converted_img_save_dir)
@@ -30,8 +37,8 @@ def main(target_file_name, conversion, similarities, converted_img_save_dir):
 
 if __name__ == '__main__':
 	# conversion = 0.01 #0 ~ 1
-	conversions = [0.2, 0.1, 0.05, 0.025, 0.02]
-	# conversions = [0.2]
+	# conversions = [0.2, 0.1, 0.05, 0.025, 0.02]
+	conversions = [0.2]
 
 	# similarity = 2600 #0~2614
 	# similarities = [0, 50, 2000, 2550]
@@ -61,7 +68,7 @@ if __name__ == '__main__':
 
 
 	target_file_name = '7-eleven_logo.png'
-	converted_img_save_dir = 'emojineer/converted_img_0603'
+	converted_img_save_dir = 'emojineer/converted_img_0616'
 	for conversion in conversions:
 		main(target_file_name, conversion, similarities, converted_img_save_dir)
 
