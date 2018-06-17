@@ -17,3 +17,10 @@ venv/*
 !.gitkeep
 
 /emojineer/*
+!/emojineer/calc_result/
+/emojineer/calc_result/*
+!/emojineer/calc_result/.gitkeep
+
+!/emojineer/target_img/
+/emojineer/target_img/*
+!/emojineer/target_img/.gitkeep
