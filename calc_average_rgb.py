@@ -30,7 +30,7 @@ def imread_color(path):
 import cv2
 import json
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, splitext
 
 dir_path = 'data/whiten_emoji_apple'
 
@@ -40,10 +40,14 @@ print(file_names[0])
 whiten_emoji_1x1_rgb_dict = {}
 
 for file_name in file_names:
-    if not file_name == '.DS_Store':
-        img = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_COLOR)
-        img_resized = cv2.resize(img, (1,1))
-        whiten_emoji_1x1_rgb_dict[file_name] = img_resized.tolist()
+
+    root, ext = splitext(file_name)
+    if not ext in ['.png', '.jpeg', '.jpg']:
+        continue
+
+    img = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_COLOR)
+    img_resized = cv2.resize(img, (1,1))
+    whiten_emoji_1x1_rgb_dict[file_name] = img_resized.tolist()
 
 with open('data/whiten_emoji_1x1_rgb.json', 'w') as f:
     json.dump(whiten_emoji_1x1_rgb_dict, f, indent=2)

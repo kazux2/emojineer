@@ -2,7 +2,7 @@ import cv2
 import json
 import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, splitext
 import numpy as np
 from operator import itemgetter
 
@@ -86,6 +86,11 @@ class Emojineer():
 				dist_candidate = {}
 
 				for w_emoji_name in self.whiten_emoji_file_names:
+
+          root, ext = splitext(w_emoji_name)
+					if not ext in ['.png', '.jpeg', '.jpg']:
+						continue
+
 					if not w_emoji_name == '.DS_Store':
 						emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
 						cut_piece_rgb = cut_target_img[h][w]
@@ -93,7 +98,13 @@ class Emojineer():
 								   + (emoji_rgb[0][0][1]-cut_piece_rgb[0][0][1])**2\
 								   + (emoji_rgb[0][0][2]-cut_piece_rgb[0][0][2])**2
 
-						dist_candidate[w_emoji_name] = distance
+					emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
+					cut_piece_rgb = cut_target_img[h][w]
+					distance = (emoji_rgb[0][0][0]-cut_piece_rgb[0][0][0])**2\
+							   + (emoji_rgb[0][0][1]-cut_piece_rgb[0][0][1])**2\
+							   + (emoji_rgb[0][0][2]-cut_piece_rgb[0][0][2])**2
+
+					dist_candidate[w_emoji_name] = distance
 
 				# horizon_emoji.append(min(dist_candidate.items(), key=itemgetter(1))[0]) #the most similar
 				# horizon_emoji1.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity1][0])

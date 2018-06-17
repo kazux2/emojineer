@@ -6,32 +6,32 @@ import os
 from urllib import error, request
 
 '''save emojipedia's html'''
-# r = requests.get("https://emojipedia.org/apple/")
-# soup = BeautifulSoup(r.content, 'html.parser')
-# with open('data/emojipedia_apple.html', "w") as f:
-#     f.write(soup.prettify())
+r = requests.get("https://emojipedia.org/apple/")
+soup = BeautifulSoup(r.content, 'html.parser')
+with open('data/emojipedia_apple.html', "w") as f:
+    f.write(soup.prettify())
 
 
 '''save image url list'''
-# with open('data/emojipedia_apple.html', "r") as f:
-#     soup = BeautifulSoup(f, 'html.parser')
-#
-#
-# emoji_grid = soup.find("div", {"class": "content"}).find("ul", {"class": "emoji-grid"})
-# first_20_images = emoji_grid.find_all("img")
-#
-# img_url_list = []
-#
-#
-# for img in first_20_images:
-#     if img['src'] == '/static/img/lazy.svg':
-#         img_url_list.append(img['data-src'])
-#     else:
-#         img_url_list.append(img['src'])
-#
-#
-# with open('data/img_url_list', "w") as f:
-#     json.dump(img_url_list, f, indent=2)
+with open('data/emojipedia_apple.html', "r") as f:
+    soup = BeautifulSoup(f, 'html.parser')
+
+
+emoji_grid = soup.find("div", {"class": "content"}).find("ul", {"class": "emoji-grid"})
+first_20_images = emoji_grid.find_all("img")
+
+img_url_list = []
+
+
+for img in first_20_images:
+    if img['src'] == '/static/img/lazy.svg':
+        img_url_list.append(img['data-src'])
+    else:
+        img_url_list.append(img['src'])
+
+
+with open('data/img_url_list', "w") as f:
+    json.dump(img_url_list, f, indent=2)
 
 
 '''download image'''

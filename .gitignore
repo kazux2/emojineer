@@ -1,6 +1,25 @@
 venv/*
 .DS_Store
 .idea/*
-data/*
-emojineer/*
-__pycache__/*
+
+#data directory
+/data/*
+!/data/emoji_apple/
+/data/emoji_apple/*
+!/data/emoji_apple/.gitkeep
+
+!/data/whiten_emoji_apple/
+/data/whiten_emoji_apple/*
+!/data/whiten_emoji_apple/.gitkeep
+
+!.gitkeep
+
+#emojineer directory
+/emojineer/*
+!/emojineer/calc_result/
+/emojineer/calc_result/*
+!/emojineer/calc_result/.gitkeep
+
+!/emojineer/target_img/
+/emojineer/target_img/*
+!/emojineer/target_img/7-eleven_logo.png
