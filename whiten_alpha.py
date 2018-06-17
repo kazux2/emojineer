@@ -8,14 +8,21 @@ https://postd.cc/image-processing-101/
 
 import cv2
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, splitext
 
 dir_path = 'data/emoji_apple'
 save_path = 'data/whiten_emoji_apple'
 
 file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
 
+
+
 for file_name in file_names:
+
+    root, ext = splitext(file_name)
+    if not ext in ['.png', '.jpeg', '.jpg']:
+        continue
+
     img_4chan = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_UNCHANGED)
     img_color = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_COLOR)
 
