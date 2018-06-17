@@ -12,7 +12,7 @@ def main(target_file_name, conversion, similarities, converted_img_save_dir):
 
 	# nearest_emoji_name_list1, nearest_emoji_name_list2, nearest_emoji_name_list3 = emojineer.find_nearest_emojis(cut_target_img)
 	nearest_emoji_name_lists = emojineer.find_nearest_emojis(cut_target_img)
-
+	print(nearest_emoji_name_lists)
 	for emoji_name, list in nearest_emoji_name_lists.items():
 		for obj in list:
 			for sim, nearest_emoji_name_list in obj.items():

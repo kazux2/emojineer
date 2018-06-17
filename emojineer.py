@@ -25,7 +25,7 @@ class Emojineer():
 		self.raws = self.height // self.convolution_resolution
 		self.column = self.width // self.convolution_resolution
 
-		# self.similarities = similarities
+		self.similarities = similarities
 		# self.similarity1 = similarity
 		# self.similarity2 = similarity + 10
 		# self.similarity3 = similarity + 20
@@ -68,16 +68,20 @@ class Emojineer():
 		'''
 		calc nearest emojis
 		'''
-		# nearest_emoji_name_lists = {}
-		nearest_emoji_name_list1 = []
-		nearest_emoji_name_list2 = []
-		nearest_emoji_name_list3 = []
+		nearest_emoji_name_lists = {}
+		for similarity in self.similarities:
+			nearest_emoji_name_lists[similarity] = []
+		# nearest_emoji_name_list1 = []
+		# nearest_emoji_name_list2 = []
+		# nearest_emoji_name_list3 = []
 
 		for h in range(self.raws):
 			horizon_emojis = {}
-			horizon_emoji1 = []
-			horizon_emoji2 = []
-			horizon_emoji3 = []
+			for similarity in self.similarities:
+				horizon_emojis[similarity] = []
+			# horizon_emoji1 = []
+			# horizon_emoji2 = []
+			# horizon_emoji3 = []
 			print('finding_nearest_emoji... {}/{}'.format(h+1, self.raws))
 			for w in range(self.column):
 				dist_candidate = {}
@@ -93,37 +97,40 @@ class Emojineer():
 						dist_candidate[w_emoji_name] = distance
 
 				# horizon_emoji.append(min(dist_candidate.items(), key=itemgetter(1))[0]) #the most similar
-				horizon_emoji1.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity1][0])
-				horizon_emoji2.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity2][0])
-				horizon_emoji3.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity3][0])
+				# horizon_emoji1.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity1][0])
+				# horizon_emoji2.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity2][0])
+				# horizon_emoji3.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity3][0])
 
-				# for similarity in self.similarities:
-				# 	# horizon_emoji_temp = []
-				# 	# horizon_emoji_temp.append(sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0])
-				# 	# horizon_emojis[similarity] = horizon_emoji_temp
-				# 	horizon_emojis[similarity] = sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0]
-
+				for similarity in self.similarities:
+					# horizon_emoji_temp = []
+					# horizon_emoji_temp.append(sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0])
+					# horizon_emojis[similarity] = horizon_emoji_temp
+					horizon_emojis[similarity].append(sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0])
+			print("yatta-")
+			print(horizon_emojis)
 			# for similarity in self.similarities:
 			# 	nearest_emoji_name_lists[similarity] = horizon_emojis[similarity]
 			# 	print('dimention')
 			# 	print(len(horizon_emojis[similarity]))
-			# for horizon_emoji in horizon_emojis:
-			# 	nearest_emoji_name_lists.append(horizon_emoji)
-			nearest_emoji_name_list1.append(horizon_emoji1)
-			nearest_emoji_name_list2.append(horizon_emoji2)
-			nearest_emoji_name_list3.append(horizon_emoji3)
+			for similarity, horizon_emoji in horizon_emojis.items():
+				print("human")
+				nearest_emoji_name_lists[similarity].append(horizon_emoji)
+
+			# nearest_emoji_name_list1.append(horizon_emoji1)
+			# nearest_emoji_name_list2.append(horizon_emoji2)
+			# nearest_emoji_name_list3.append(horizon_emoji3)
 
 		# # type(distance) numpy.int64. int64' is not JSON serializable
 		# with open('emojineer/calc_result/{}_nearest_emoji_names'.format(self.target_name), 'w') as f:
 		# 	json.dump(nearest_emoji_name_list, f, indent=2)
 
-		return {self.target_file_name:[{"sim1":nearest_emoji_name_list1},
-										{"sim2":nearest_emoji_name_list2},
-										 {"sim3":nearest_emoji_name_list3}
-									   ]
-				}
+		# return {self.target_file_name:[{"sim1":nearest_emoji_name_list1},
+		# 								{"sim2":nearest_emoji_name_list2},
+		# 								 {"sim3":nearest_emoji_name_list3}
+		# 							   ]
+		# 		}
 		# return [nearest_emoji_name_list1, nearest_emoji_name_list2, nearest_emoji_name_list3]
-		# return nearest_emoji_name_lists
+		return {self.target_file_name:[nearest_emoji_name_lists]}
 
 
 	def concatinate_emojis(self, nearest_emoji_name_list, similarity, converted_img_save_dir):
