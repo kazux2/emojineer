@@ -9,7 +9,7 @@ from operator import itemgetter
 
 class Emojineer():
 
-	def __init__(self, target_file_name, conversion):
+	def __init__(self, target_file_name, conversion, similarities):
 		self.dir_path = 'emojineer/target_img'
 		self.target_file_name = target_file_name
 		self.target_name, self.target_ext = os.path.splitext(target_file_name)
@@ -19,9 +19,18 @@ class Emojineer():
 
 		if conversion == 0:
 			conversion = 0.01
+
+		self.conversion = conversion
+		print("INFO:\t{{\"conversion\":{}}}".format(self.conversion))
+
 		self.convolution_resolution = round(min([self.height,self.width]) * conversion)
 		self.raws = self.height // self.convolution_resolution
 		self.column = self.width // self.convolution_resolution
+
+		self.similarities = similarities
+		# self.similarity1 = 0
+		# self.similarity2 = 0 + 10
+		# self.similarity3 = 0 + 20
 
 		self.whiten_emoji_path = 'data/whiten_emoji_apple'
 		self.whiten_emoji_file_names = [f for f in listdir(self.whiten_emoji_path) if isfile(join(self.whiten_emoji_path, f))]
@@ -58,20 +67,36 @@ class Emojineer():
 		'''
 		calc nearest emojis
 		'''
-
-		nearest_emoji_name_list = []
+		nearest_emoji_name_lists = {}
+		for similarity in self.similarities:
+			nearest_emoji_name_lists[similarity] = []
+		# nearest_emoji_name_list1 = []
+		# nearest_emoji_name_list2 = []
+		# nearest_emoji_name_list3 = []
 
 		for h in range(self.raws):
-			horizon_emoji = []
+			horizon_emojis = {}
+			for similarity in self.similarities:
+				horizon_emojis[similarity] = []
+			# horizon_emoji1 = []
+			# horizon_emoji2 = []
+			# horizon_emoji3 = []
 			print('finding_nearest_emoji... {}/{}'.format(h+1, self.raws))
 			for w in range(self.column):
 				dist_candidate = {}
 
 				for w_emoji_name in self.whiten_emoji_file_names:
 
-					root, ext = splitext(w_emoji_name)
+          root, ext = splitext(w_emoji_name)
 					if not ext in ['.png', '.jpeg', '.jpg']:
 						continue
+
+					if not w_emoji_name == '.DS_Store':
+						emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
+						cut_piece_rgb = cut_target_img[h][w]
+						distance = (emoji_rgb[0][0][0]-cut_piece_rgb[0][0][0])**2\
+								   + (emoji_rgb[0][0][1]-cut_piece_rgb[0][0][1])**2\
+								   + (emoji_rgb[0][0][2]-cut_piece_rgb[0][0][2])**2
 
 					emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
 					cut_piece_rgb = cut_target_img[h][w]
@@ -81,21 +106,40 @@ class Emojineer():
 
 					dist_candidate[w_emoji_name] = distance
 
-				horizon_emoji.append(min(dist_candidate.items(), key=itemgetter(1))[0])
-			nearest_emoji_name_list.append(horizon_emoji)
+				# horizon_emoji.append(min(dist_candidate.items(), key=itemgetter(1))[0]) #the most similar
+				# horizon_emoji1.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity1][0])
+				# horizon_emoji2.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity2][0])
+				# horizon_emoji3.append(sorted(dist_candidate.items(), key=itemgetter(1))[self.similarity3][0])
 
-		with open('emojineer/calc_result/{}_nearest_emoji_names'.format(self.target_name), 'w') as f:
-			json.dump(nearest_emoji_name_list, f, indent=2)
+				for similarity in self.similarities:
+					# horizon_emoji_temp = []
+					# horizon_emoji_temp.append(sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0])
+					# horizon_emojis[similarity] = horizon_emoji_temp
+					horizon_emojis[similarity].append(sorted(dist_candidate.items(), key=itemgetter(1))[similarity][0])
 
-		return nearest_emoji_name_list
+			# for similarity in self.similarities:
+			# 	nearest_emoji_name_lists[similarity] = horizon_emojis[similarity]
+
+			for similarity, horizon_emoji in horizon_emojis.items():
+				nearest_emoji_name_lists[similarity].append(horizon_emoji)
+
+			# nearest_emoji_name_list1.append(horizon_emoji1)
+			# nearest_emoji_name_list2.append(horizon_emoji2)
+			# nearest_emoji_name_list3.append(horizon_emoji3)
+
+		return {self.target_file_name:[nearest_emoji_name_lists]}
+		# return nearest_emoji_name_list1, nearest_emoji_name_list2, nearest_emoji_name_list3
 
 
-	def concatinate_emojis(self, nearest_emoji_name_list):
+	def concatinate_emojis(self, nearest_emoji_name_list, similarity, converted_img_save_dir):
 		'''
 		concatinate emojis
 		'''
+		print(len(nearest_emoji_name_list), self.raws)
+		print(len(nearest_emoji_name_list[0]), self.column)
 
 		vertical_imgs = []
+
 		for h in range(self.raws):
 			horison_imgs = []
 
@@ -109,27 +153,25 @@ class Emojineer():
 			vertical_imgs.append(im_v)
 
 		converted_img = cv2.vconcat(vertical_imgs)
-		cv2.imshow('kakaka', converted_img)
-		cv2.waitKey(0)
-		cv2.destroyAllWindows()
-		cv2.imwrite('emojineer/converted_img/{}_conv_{}{}'.format(self.target_name, self.convolution_resolution, self.target_ext),
+		cv2.imwrite('{}/{}_s{}_c{}{}'.format(converted_img_save_dir, self.target_name, similarity, self.conversion, self.target_ext),
 					converted_img)
 
 		return converted_img
 
 
-
-
-
-
 if __name__ == '__main__':
 	target_file_name = '7-eleven_logo.png'
+	converted_img_save_dir = 'emojineer/converted_img_0616'
 
-	emojineer = Emojineer(target_file_name, 0.2)
+	emojineer = Emojineer(target_file_name, conversion=0.2, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
-	nearest_emoji_name_list = emojineer.find_nearest_emojis(cut_target_img)
-	converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list)
+	nearest_emoji_name_lists = emojineer.find_nearest_emojis(cut_target_img)
+	for emoji_name, list in nearest_emoji_name_lists.items():
+		for obj in list:
+			for sim, nearest_emoji_name_list in obj.items():
+				converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
+
 
 	cv2.imshow('converted_img', converted_img)
 	cv2.waitKey(0)

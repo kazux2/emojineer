@@ -2,9 +2,7 @@ venv/*
 .DS_Store
 .idea/*
 
-
 #data directory
-
 /data/*
 !/data/emoji_apple/
 /data/emoji_apple/*
@@ -16,6 +14,7 @@ venv/*
 
 !.gitkeep
 
+#emojineer directory
 /emojineer/*
 !/emojineer/calc_result/
 /emojineer/calc_result/*
