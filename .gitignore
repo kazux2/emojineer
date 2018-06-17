@@ -23,4 +23,4 @@ venv/*
 
 !/emojineer/target_img/
 /emojineer/target_img/*
-!/emojineer/target_img/.gitkeep
+!/emojineer/target_img/7-eleven_logo.png
