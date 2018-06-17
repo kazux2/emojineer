@@ -1,5 +1,5 @@
 # emojineer
-An image converter from given images into emoji collage.
+An image converter from a given image into an emoji collage.
 
 ## set up
 ### pip install libraries
