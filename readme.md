@@ -15,4 +15,5 @@ run `whiten_alpha.py`
 run `calc_average_rgb.py`
 
 ## run emojineer
-
+prepare target image and edit `target_file_name` under `if __name__ == '__main__':` in `emojineer.py`.
+run `emojineer.py`
