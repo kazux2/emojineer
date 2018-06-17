@@ -4,16 +4,23 @@ venv/*
 
 
 #data directory
-data/*
-!data/emoji_apple
-data/emoji_apple/*
-!data/whiten_emoji_apple
-data/whiten_emoji_apple/*
 
+/data/*
+!/data/emoji_apple/
+/data/emoji_apple/*
+!/data/emoji_apple/.gitkeep
 
-#output directory
-emojineer/*
-!emojineer/calc_result
-emojineer/calc_result/*
-!emojineer/target_img
-emojineer/target_img/*
+!/data/whiten_emoji_apple/
+/data/whiten_emoji_apple/*
+!/data/whiten_emoji_apple/.gitkeep
+
+!.gitkeep
+
+/emojineer/*
+!/emojineer/calc_result/
+/emojineer/calc_result/*
+!/emojineer/calc_result/.gitkeep
+
+!/emojineer/target_img/
+/emojineer/target_img/*
+!/emojineer/target_img/.gitkeep
