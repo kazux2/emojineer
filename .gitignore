@@ -13,3 +13,7 @@ data/whiten_emoji_apple/*
 
 #output directory
 emojineer/*
+!emojineer/calc_result
+emojineer/calc_result/*
+!emojineer/target_img
+emojineer/target_img/*
