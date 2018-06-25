@@ -91,12 +91,8 @@ class Emojineer():
 					if not ext in ['.png', '.jpeg', '.jpg']:
 						continue
 
-					if not w_emoji_name == '.DS_Store':
-						emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
-						cut_piece_rgb = cut_target_img[h][w]
-						distance = (emoji_rgb[0][0][0]-cut_piece_rgb[0][0][0])**2\
-								   + (emoji_rgb[0][0][1]-cut_piece_rgb[0][0][1])**2\
-								   + (emoji_rgb[0][0][2]-cut_piece_rgb[0][0][2])**2
+					if w_emoji_name == '.DS_Store':
+						continue
 
 					emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
 					cut_piece_rgb = cut_target_img[h][w]
