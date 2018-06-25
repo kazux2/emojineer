@@ -201,7 +201,7 @@ if __name__ == '__main__':
 	target_file_name = '7-eleven_logo.png'
 	converted_img_save_dir = 'emojineer/converted_img_0616'
 
-	emojineer = Emojineer(target_file_name, conversion=0.05, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.01, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
 
