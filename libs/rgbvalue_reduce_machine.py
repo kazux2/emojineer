@@ -17,8 +17,8 @@ class RGBvalueReduceMachine():
 
 		new_r = q * self.unit + _r
 
-		if new_r > 240:
-			new_r = 240
+		if new_r > 255:
+			new_r = 255 -(255 % self.unit)
 		return new_r
 
 	def rgb_value_reducer(self, rgblist):

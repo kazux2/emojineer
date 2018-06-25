@@ -132,6 +132,8 @@ class Emojineer():
 		'''
 		calc nearest emojis
 		'''
+		with open('data/num_wemoji_dict.json', 'r') as f:
+			num_wemoji_dict = json.load(f)
 		nearest_emoji_name_lists = {}
 		for similarity in self.similarities:
 			nearest_emoji_name_lists[similarity] = []
@@ -146,21 +148,20 @@ class Emojineer():
 
 				cut_piece_rgb = cut_target_img[h][w]
 
-				reducer = RGBvalueReduceMachine(20)
+				reducer = RGBvalueReduceMachine(20) # hashの解像度と揃える
 				cut_piece_rgb_list = reducer.rgb_value_reducer(cut_piece_rgb[0][0].tolist())
 
 				_r = '{0:03d}'.format(cut_piece_rgb_list[0])
 				_g = '{0:03d}'.format(cut_piece_rgb_list[1])
 				_b = '{0:03d}'.format(cut_piece_rgb_list[2])
+
 				dict_key = '{}{}{}'.format(_r, _g, _b)
 
-				hash_file_name = 'data/w1x1_hash_dicts/{}.json'.format(dict_key)
-
-				with open(hash_file_name, 'r') as f:
+				with open('data/w1x1_hash_dicts/{}.json'.format(dict_key), 'r') as f:
 					w1x1_hash = json.load(f)
 
 				for similarity in self.similarities:
-					horizon_emojis[similarity].append(w1x1_hash[dict_key][similarity][0])
+					horizon_emojis[similarity].append(num_wemoji_dict[str(w1x1_hash[similarity])])
 
 			for similarity, horizon_emoji in horizon_emojis.items():
 				nearest_emoji_name_lists[similarity].append(horizon_emoji)
@@ -200,7 +201,7 @@ if __name__ == '__main__':
 	target_file_name = '7-eleven_logo.png'
 	converted_img_save_dir = 'emojineer/converted_img_0616'
 
-	emojineer = Emojineer(target_file_name, conversion=0.001, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.05, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
 

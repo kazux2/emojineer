@@ -9,6 +9,19 @@ pardir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 with open('{}/{}'.format(pardir, 'data/whiten_emoji_1x1_rgb.json'), 'r') as f:
 	whiten_emoji_1x1_rgb = json.load(f)
 
+num_wemoji_dict = {}
+wemoji_num_dict = {}
+idx = 0
+for key in whiten_emoji_1x1_rgb.keys():
+	num_wemoji_dict[idx] = key
+	wemoji_num_dict[key] = idx
+	idx += 1
+
+# with open('{}/{}'.format(pardir, 'data/num_wemoji_dict.json'), 'w') as f:
+# 	json.dump(num_wemoji_dict, f, indent=2)
+#
+# with open('{}/{}'.format(pardir, 'data/wemoji_num_dict.json'), 'w') as f:
+# 	json.dump(wemoji_num_dict, f, indent=2)
 
 '''
 all_rgb_dict = {
@@ -39,7 +52,7 @@ rgb_emoji_dict = {
 
 
 for rgb_key, rgb_array in all_rgb_dict.items():
-	rgb_emoji_dict = {}
+	rgb_emoji_dict = []
 	print('calc for {}'.format(rgb_key))
 	rgb_ndarray = np.array(rgb_array)
 
@@ -52,13 +65,13 @@ for rgb_key, rgb_array in all_rgb_dict.items():
 				   + (nd_emoji_rgb[0][0][2] - rgb_ndarray[2]) ** 2
 		emoji_distance_dict[emoji_name] = distance
 
-	rgb_emoji_dict[rgb_key] = [[i[0], str(i[1])] for i
-							   in sorted(emoji_distance_dict.items(), key=itemgetter(1))[:10]
-							   ]
+	rgb_emoji_dict = [ wemoji_num_dict[i[0]] for i
+					   in sorted(emoji_distance_dict.items(), key=itemgetter(1))[:5]
+					   ]
 
 
 	with open('{}/{}/{}.json'.format(pardir, 'data/w1x1_hash_dicts/', rgb_key), 'w') as f:
-		json.dump(rgb_emoji_dict, f, indent=2)
+		json.dump(rgb_emoji_dict, f)
 
 
 
