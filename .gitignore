@@ -2,6 +2,8 @@ venv/*
 .DS_Store
 .idea/*
 __pycache__/*
+libs/__pycache__/*
+trash/*
 
 #data directory
 /data/*
@@ -12,6 +14,10 @@ __pycache__/*
 !/data/whiten_emoji_apple/
 /data/whiten_emoji_apple/*
 !/data/whiten_emoji_apple/.gitkeep
+
+!/data/w1x1_hash_dicts/
+/data/w1x1_hash_dicts/*
+!/data/w1x1_hash_dicts/.gitkeep
 
 !.gitkeep
 

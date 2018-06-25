@@ -1,0 +1,65 @@
+
+import json
+import time
+import os, sys
+import numpy as np
+from operator import itemgetter
+
+pardir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+with open('{}/{}'.format(pardir, 'data/whiten_emoji_1x1_rgb.json'), 'r') as f:
+	whiten_emoji_1x1_rgb = json.load(f)
+
+
+'''
+all_rgb_dict = {
+'000000000':[0, 0, 0],
+'000000001':[0, 0, 5],
+...
+'255255255:[255, 255, 255]
+}
+'''
+all_rgb_dict = {}
+
+for r in range(0, 256, 20):
+	for g in range(0, 256, 20):
+		for b in range(0, 256, 20):
+			_r = '{0:03d}'.format(r)
+			_g = '{0:03d}'.format(g)
+			_b = '{0:03d}'.format(b)
+			dict_key = '{}{}{}'.format(_r, _g, _b)
+			all_rgb_dict[dict_key] = [r, g, b]
+
+'''
+rgb_emoji_dict = {
+'000000000':"w_tiger-face_1f42f.png",
+...
+'255255255:"_white.png"
+}
+'''
+
+
+for rgb_key, rgb_array in all_rgb_dict.items():
+	rgb_emoji_dict = {}
+	print('calc for {}'.format(rgb_key))
+	rgb_ndarray = np.array(rgb_array)
+
+	emoji_distance_dict = {}
+	for emoji_name, emoji_rgb in whiten_emoji_1x1_rgb.items():
+		nd_emoji_rgb = np.array(emoji_rgb)
+
+		distance = (nd_emoji_rgb[0][0][0] - rgb_ndarray[0]) ** 2 \
+				   + (nd_emoji_rgb[0][0][1] - rgb_ndarray[1]) ** 2 \
+				   + (nd_emoji_rgb[0][0][2] - rgb_ndarray[2]) ** 2
+		emoji_distance_dict[emoji_name] = distance
+
+	rgb_emoji_dict[rgb_key] = [[i[0], str(i[1])] for i
+							   in sorted(emoji_distance_dict.items(), key=itemgetter(1))[:10]
+							   ]
+
+
+	with open('{}/{}/{}.json'.format(pardir, 'data/w1x1_hash_dicts/', rgb_key), 'w') as f:
+		json.dump(rgb_emoji_dict, f, indent=2)
+
+
+
+
