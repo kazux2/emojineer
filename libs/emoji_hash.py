@@ -17,11 +17,13 @@ for key in whiten_emoji_1x1_rgb.keys():
 	wemoji_num_dict[key] = idx
 	idx += 1
 
-# with open('{}/{}'.format(pardir, 'data/num_wemoji_dict.json'), 'w') as f:
-# 	json.dump(num_wemoji_dict, f, indent=2)
-#
-# with open('{}/{}'.format(pardir, 'data/wemoji_num_dict.json'), 'w') as f:
-# 	json.dump(wemoji_num_dict, f, indent=2)
+
+# need these index_to_id/id_to_index file for emojineer.py when
+with open('{}/{}'.format(pardir, 'data/num_wemoji_dict.json'), 'w') as f:
+	json.dump(num_wemoji_dict, f, indent=2)
+
+with open('{}/{}'.format(pardir, 'data/wemoji_num_dict.json'), 'w') as f:
+	json.dump(wemoji_num_dict, f, indent=2)
 
 '''
 all_rgb_dict = {
@@ -33,9 +35,9 @@ all_rgb_dict = {
 '''
 all_rgb_dict = {}
 
-for r in range(0, 256, 20):
-	for g in range(0, 256, 20):
-		for b in range(0, 256, 20):
+for r in range(0, 256, 5):
+	for g in range(0, 256, 5):
+		for b in range(0, 256, 5):
 			_r = '{0:03d}'.format(r)
 			_g = '{0:03d}'.format(g)
 			_b = '{0:03d}'.format(b)
