@@ -10,7 +10,7 @@ from libs.rgbvalue_reduce_machine import RGBvalueReduceMachine
 
 class Emojineer():
 
-	def __init__(self, target_file_name, conversion, similarities):
+	def __init__(self, target_file_name, conversion, similarities, hash_dict_path, hash_step):
 		self.dir_path = 'emojineer/target_img'
 		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/7-eleven_logo.png'
 		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/okapi.jpg'
@@ -32,9 +32,9 @@ class Emojineer():
 		self.column = self.width // self.convolution_resolution
 
 		self.similarities = similarities
-		# self.similarity1 = 0
-		# self.similarity2 = 0 + 10
-		# self.similarity3 = 0 + 20
+
+		self.hash_dict_path = hash_dict_path
+		self.hash_step = hash_step
 
 		self.whiten_emoji_path = 'data/whiten_emoji_apple'
 		self.whiten_emoji_file_names = [f for f in listdir(self.whiten_emoji_path) if isfile(join(self.whiten_emoji_path, f))]
@@ -151,7 +151,7 @@ class Emojineer():
 
 				cut_piece_rgb = cut_target_img[h][w]
 
-				reducer = RGBvalueReduceMachine(5) # hashの解像度と揃える
+				reducer = RGBvalueReduceMachine(self.hash_step) # hashの解像度と揃える
 				cut_piece_rgb_list = reducer.rgb_value_reducer(cut_piece_rgb[0][0].tolist())
 
 				_r = '{0:03d}'.format(cut_piece_rgb_list[0])
@@ -160,7 +160,7 @@ class Emojineer():
 
 				dict_key = '{}{}{}'.format(_r, _g, _b)
 
-				with open('data/w1x1_hash_dicts_0_256_5/{}.json'.format(dict_key), 'r') as f:
+				with open('{}/{}.json'.format(self.hash_dict_path ,dict_key), 'r') as f:
 					w1x1_hash = json.load(f)
 
 				# from libs.db_access import W1x1RGBtoEmojiname
@@ -206,22 +206,24 @@ class Emojineer():
 			vertical_imgs.append(im_v)
 
 		converted_img = cv2.vconcat(vertical_imgs)
-		cv2.imwrite('{}/{}_s{}_c{}{}'.format(converted_img_save_dir, self.target_name, similarity, self.conversion, self.target_ext),
+		cv2.imwrite('{}/{}_step{}_sim{}_c{}{}'.format(converted_img_save_dir, self.target_name, self.hash_step, similarity, self.conversion, self.target_ext),
 					converted_img)
 
 		return converted_img
 
 
 if __name__ == '__main__':
-	# target_file_name = 'pikachu.jpg'
+	# target_file_name = 'hokusai.jpg'
 	target_file_name = '7-eleven_logo.png'
-	converted_img_save_dir = 'emojineer/converted_img/'
+	converted_img_save_dir = 'emojineer/converted_img/' #ToDo これクラス変数で持つか、他のクラス変数をメソッド実行時に直接渡す方式で統一したい
+	hash_dict_path = 'data/w1x1_hash_dicts_0_256_5'
+	hash_step = 5
 
-	emojineer = Emojineer(target_file_name, conversion=0.02, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.018, similarities=[0], hash_dict_path=hash_dict_path, hash_step=hash_step)
 	cut_target_img = emojineer.split_target_image()
 
 
-	# 通常処理
+	# # 通常処理
 	# t1 = time.time()
 	# nearest_emoji_name_lists_normal = emojineer.find_nearest_emojis(cut_target_img)
 	# print(nearest_emoji_name_lists_normal)
@@ -251,7 +253,7 @@ if __name__ == '__main__':
 				converted_img_hash = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
 
 
-	cv2.imshow('converted_img_hash', converted_img_hash)
+	# cv2.imshow('converted_img_hash', converted_img_hash)
 	# cv2.waitKey(0)
 	# cv2.destroyAllWindows()
 
