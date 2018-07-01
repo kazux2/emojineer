@@ -163,10 +163,11 @@ class Emojineer():
 
 
 if __name__ == '__main__':
-	target_file_name = 'pikachu.jpg'
-	converted_img_save_dir = 'emojineer/converted_img/test_pikachu_c2.png'
+	# target_file_name = 'pikachu.jpg'
+	target_file_name = '7-eleven_logo.png'
+	converted_img_save_dir = 'emojineer/converted_img/'
 
-	emojineer = Emojineer(target_file_name, conversion=0.01, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.2, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
 	nearest_emoji_name_lists = emojineer.find_nearest_emojis(cut_target_img)
@@ -176,7 +177,7 @@ if __name__ == '__main__':
 				converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
 
 
-	cv2.imwrite(converted_img_save_dir, converted_img)
+	# cv2.imwrite(converted_img_save_dir, converted_img)
 	# cv2.imshow('converted_img', converted_img)
 	# cv2.waitKey(0)
 	# cv2.destroyAllWindows()
