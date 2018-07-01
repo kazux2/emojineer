@@ -43,6 +43,10 @@ for r in range(0, 256, 5):
 			_b = '{0:03d}'.format(b)
 			dict_key = '{}{}{}'.format(_r, _g, _b)
 			all_rgb_dict[dict_key] = [r, g, b]
+			print(dict_key)
+	# 		break
+	# 	break
+	# break
 
 '''
 rgb_emoji_dict = {
@@ -67,13 +71,23 @@ for rgb_key, rgb_array in all_rgb_dict.items():
 				   + (nd_emoji_rgb[0][0][2] - rgb_ndarray[2]) ** 2
 		emoji_distance_dict[emoji_name] = distance
 
-	rgb_emoji_dict = [ wemoji_num_dict[i[0]] for i
-					   in sorted(emoji_distance_dict.items(), key=itemgetter(1))[:5]
-					   ]
+	# save top five similar emoji NUM as file
+	# rgb_emoji_dict = [ wemoji_num_dict[i[0]] for i
+	# 				   in sorted(emoji_distance_dict.items(), key=itemgetter(1))[:5]
+	# 				   ]
+
+	# with open('{}/{}/{}.json'.format(pardir, 'data/w1x1_hash_dicts/', rgb_key), 'w') as f:
+	# 	json.dump(rgb_emoji_dict, f)
+
+	rgb_emoji = sorted(emoji_distance_dict.items(), key=itemgetter(1))[0][0]
+	print(rgb_emoji)
+	from libs.db_access import W1x1RGBtoEmojiname
+
+	record_num, created = W1x1RGBtoEmojiname.get_or_create(rgb_value=int(rgb_key), emoji_file_name=rgb_emoji)
+	print(record_num, "th record created:", created)
 
 
-	with open('{}/{}/{}.json'.format(pardir, 'data/w1x1_hash_dicts/', rgb_key), 'w') as f:
-		json.dump(rgb_emoji_dict, f)
+
 
 
 

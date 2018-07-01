@@ -148,7 +148,7 @@ class Emojineer():
 
 				cut_piece_rgb = cut_target_img[h][w]
 
-				reducer = RGBvalueReduceMachine(20) # hashの解像度と揃える
+				reducer = RGBvalueReduceMachine(5) # hashの解像度と揃える
 				cut_piece_rgb_list = reducer.rgb_value_reducer(cut_piece_rgb[0][0].tolist())
 
 				_r = '{0:03d}'.format(cut_piece_rgb_list[0])
@@ -157,11 +157,23 @@ class Emojineer():
 
 				dict_key = '{}{}{}'.format(_r, _g, _b)
 
-				with open('data/w1x1_hash_dicts/{}.json'.format(dict_key), 'r') as f:
+				with open('data/w1x1_hash_dicts_0_256_5/{}.json'.format(dict_key), 'r') as f:
 					w1x1_hash = json.load(f)
 
+				# from libs.db_access import W1x1RGBtoEmojiname
+				# print(dict_key)
+				# query = W1x1RGBtoEmojiname.get_or_none(W1x1RGBtoEmojiname.rgb_value == dict_key)
+				#
+				# if query != None:
+				# 	print("selected row:", query.emoji_file_name)
+
 				for similarity in self.similarities:
+
 					horizon_emojis[similarity].append(num_wemoji_dict[str(w1x1_hash[similarity])])
+					# if query != None:
+					# 	horizon_emojis[similarity].append(query.emoji_file_name)
+					# else:
+					# 	horizon_emojis[similarity].append("_white.png")
 
 			for similarity, horizon_emoji in horizon_emojis.items():
 				nearest_emoji_name_lists[similarity].append(horizon_emoji)
@@ -198,10 +210,10 @@ class Emojineer():
 
 
 if __name__ == '__main__':
-	target_file_name = '7-eleven_logo.png'
-	converted_img_save_dir = 'emojineer/converted_img_0616'
+	target_file_name = 'kirin02.jpg'
+	converted_img_save_dir = 'emojineer/converted_img_0630'
 
-	emojineer = Emojineer(target_file_name, conversion=0.01, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.02, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
 

@@ -7,3 +7,5 @@ numpy==1.14.3
 opencv-python==3.4.1.15
 requests==2.18.4
 urllib3==1.22
+psycopg2-binary==2.7.5
+peewee==3.5.1
