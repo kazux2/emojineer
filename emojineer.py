@@ -1,11 +1,12 @@
 import cv2
 import json
 import os
+import time
 from os import listdir
 from os.path import isfile, join, splitext
 import numpy as np
 from operator import itemgetter
-
+from libs.rgbvalue_reduce_machine import RGBvalueReduceMachine
 
 class Emojineer():
 
@@ -94,12 +95,8 @@ class Emojineer():
 					if not ext in ['.png', '.jpeg', '.jpg']:
 						continue
 
-					if not w_emoji_name == '.DS_Store':
-						emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
-						cut_piece_rgb = cut_target_img[h][w]
-						distance = (emoji_rgb[0][0][0]-cut_piece_rgb[0][0][0])**2\
-								   + (emoji_rgb[0][0][1]-cut_piece_rgb[0][0][1])**2\
-								   + (emoji_rgb[0][0][2]-cut_piece_rgb[0][0][2])**2
+					if w_emoji_name == '.DS_Store':
+						continue
 
 					emoji_rgb = np.array(self.whiten_emoji_1x1_rgb[w_emoji_name])
 					cut_piece_rgb = cut_target_img[h][w]
@@ -132,6 +129,59 @@ class Emojineer():
 
 		return {self.target_file_name:[nearest_emoji_name_lists]}
 		# return nearest_emoji_name_list1, nearest_emoji_name_list2, nearest_emoji_name_list3
+
+
+	def find_nearest_emojis_with_hash(self, cut_target_img):
+		'''
+		calc nearest emojis
+		'''
+		with open('data/num_wemoji_dict.json', 'r') as f:
+			num_wemoji_dict = json.load(f)
+		nearest_emoji_name_lists = {}
+		for similarity in self.similarities:
+			nearest_emoji_name_lists[similarity] = []
+
+		for h in range(self.raws):
+			horizon_emojis = {}
+			for similarity in self.similarities:
+				horizon_emojis[similarity] = []
+
+			print('finding_nearest_emoji... {}/{}'.format(h+1, self.raws))
+			for w in range(self.column):
+
+				cut_piece_rgb = cut_target_img[h][w]
+
+				reducer = RGBvalueReduceMachine(5) # hashの解像度と揃える
+				cut_piece_rgb_list = reducer.rgb_value_reducer(cut_piece_rgb[0][0].tolist())
+
+				_r = '{0:03d}'.format(cut_piece_rgb_list[0])
+				_g = '{0:03d}'.format(cut_piece_rgb_list[1])
+				_b = '{0:03d}'.format(cut_piece_rgb_list[2])
+
+				dict_key = '{}{}{}'.format(_r, _g, _b)
+
+				with open('data/w1x1_hash_dicts_0_256_5/{}.json'.format(dict_key), 'r') as f:
+					w1x1_hash = json.load(f)
+
+				# from libs.db_access import W1x1RGBtoEmojiname
+				# print(dict_key)
+				# query = W1x1RGBtoEmojiname.get_or_none(W1x1RGBtoEmojiname.rgb_value == dict_key)
+				#
+				# if query != None:
+				# 	print("selected row:", query.emoji_file_name)
+
+				for similarity in self.similarities:
+
+					horizon_emojis[similarity].append(num_wemoji_dict[str(w1x1_hash[similarity])])
+					# if query != None:
+					# 	horizon_emojis[similarity].append(query.emoji_file_name)
+					# else:
+					# 	horizon_emojis[similarity].append("_white.png")
+
+			for similarity, horizon_emoji in horizon_emojis.items():
+				nearest_emoji_name_lists[similarity].append(horizon_emoji)
+
+		return {self.target_file_name: [nearest_emoji_name_lists]}
 
 
 	def concatinate_emojis(self, nearest_emoji_name_list, similarity, converted_img_save_dir):
@@ -167,18 +217,41 @@ if __name__ == '__main__':
 	target_file_name = '7-eleven_logo.png'
 	converted_img_save_dir = 'emojineer/converted_img/'
 
-	emojineer = Emojineer(target_file_name, conversion=0.2, similarities=[0])
+	emojineer = Emojineer(target_file_name, conversion=0.02, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
 
-	nearest_emoji_name_lists = emojineer.find_nearest_emojis(cut_target_img)
-	for emoji_name, list in nearest_emoji_name_lists.items():
+
+	# 通常処理
+	# t1 = time.time()
+	# nearest_emoji_name_lists_normal = emojineer.find_nearest_emojis(cut_target_img)
+	# print(nearest_emoji_name_lists_normal)
+	# t2 = time.time()
+	#
+	# elapsed_time_normal = t2 - t1
+	# print(f"通常処理時間：{elapsed_time_normal}")
+	#
+	# for emoji_name, list in nearest_emoji_name_lists_normal.items():
+	# 	for obj in list:
+	# 		for sim, nearest_emoji_name_list in obj.items():
+	# 			converted_img_normal = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
+
+
+	# ハッシュでの計算
+	t3 = time.time()
+	nearest_emoji_name_lists_hash = emojineer.find_nearest_emojis_with_hash(cut_target_img)
+	print(nearest_emoji_name_lists_hash)
+	t4 = time.time()
+
+	elapsed_time_hash = t4 - t3
+	print(f"ハッシュ処理時間：{elapsed_time_hash}")
+
+	for emoji_name, list in nearest_emoji_name_lists_hash.items():
 		for obj in list:
 			for sim, nearest_emoji_name_list in obj.items():
-				converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
+				converted_img_hash = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
 
 
-	# cv2.imwrite(converted_img_save_dir, converted_img)
-	# cv2.imshow('converted_img', converted_img)
+	cv2.imshow('converted_img_hash', converted_img_hash)
 	# cv2.waitKey(0)
 	# cv2.destroyAllWindows()
 
