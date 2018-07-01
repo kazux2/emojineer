@@ -11,9 +11,12 @@ class Emojineer():
 
 	def __init__(self, target_file_name, conversion, similarities):
 		self.dir_path = 'emojineer/target_img'
+		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/7-eleven_logo.png'
+		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/okapi.jpg'
+		#self.dir_path = 'okapi.jpg'
+
 		self.target_file_name = target_file_name
 		self.target_name, self.target_ext = os.path.splitext(target_file_name)
-
 		self.target_img = cv2.imread('{}/{}'.format(self.dir_path, self.target_file_name))
 		self.height, self.width = self.target_img.shape[:2]
 
@@ -160,8 +163,9 @@ class Emojineer():
 
 
 if __name__ == '__main__':
+	# target_file_name = 'pikachu.jpg'
 	target_file_name = '7-eleven_logo.png'
-	converted_img_save_dir = 'emojineer/converted_img_0616'
+	converted_img_save_dir = 'emojineer/converted_img/'
 
 	emojineer = Emojineer(target_file_name, conversion=0.2, similarities=[0])
 	cut_target_img = emojineer.split_target_image()
@@ -173,21 +177,10 @@ if __name__ == '__main__':
 				converted_img = emojineer.concatinate_emojis(nearest_emoji_name_list, sim, converted_img_save_dir)
 
 
-	cv2.imshow('converted_img', converted_img)
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
-
-
-
-
-
-
-
-
-
-
-
-
+	# cv2.imwrite(converted_img_save_dir, converted_img)
+	# cv2.imshow('converted_img', converted_img)
+	# cv2.waitKey(0)
+	# cv2.destroyAllWindows()
 
 
 
