@@ -51,3 +51,4 @@ for file_name in file_names:
 
 with open('data/whiten_emoji_1x1_rgb.json', 'w') as f:
     json.dump(whiten_emoji_1x1_rgb_dict, f, indent=2)
+
