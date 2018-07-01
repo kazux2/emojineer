@@ -19,6 +19,9 @@ trash/*
 /data/w1x1_hash_dicts/*
 !/data/w1x1_hash_dicts/.gitkeep
 
+!/data/w1x1_hash_dicts_0_256_5.zip
+!/data/w1x1_hash_dicts_0_256_20.zip
+
 !.gitkeep
 
 #emojineer directory
