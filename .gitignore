@@ -15,12 +15,11 @@ trash/*
 /data/whiten_emoji_apple/*
 !/data/whiten_emoji_apple/.gitkeep
 
-!/data/w1x1_hash_dicts/
-/data/w1x1_hash_dicts/*
-!/data/w1x1_hash_dicts/.gitkeep
+!/data/wemoji_num_dict.json
+!/data/num_wemoji_dict.json
+!/data/pickle_w1x1_hash_dicts_0_256_5
+!/data/pickle_w1x1_hash_dicts_0_256_20
 
-!/data/w1x1_hash_dicts_0_256_5.zip
-!/data/w1x1_hash_dicts_0_256_20.zip
 
 !.gitkeep
 
