@@ -66,7 +66,7 @@ class Emojineer():
 				c = w * self.convolution_resolution
 				c_ = (w + 1) * self.convolution_resolution
 				cut_piece = target_img[r:r_, c:c_]
-				cut_piece_1x1 = cv2.resize(cut_piece, (1,1)) # ここ大地くんの方法適用
+				cut_piece_1x1 = cv2.resize(cut_piece, (1,1)) #ToDo ここ大地くんの方法適用
 				horizon_cut.append(cut_piece_1x1)
 
 			cut_target_img.append(horizon_cut)
