@@ -142,7 +142,7 @@ class Emojineer():
 
 		converted_img = cv2.vconcat(vertical_imgs)
 		target_name, target_ext = os.path.splitext(target_file_name)
-		cv2.imwrite('{}/{}_step{}_sim{}_c{}{}'.format(save_dir, target_name, self.hash_step, similarity, self.conversion, target_ext),
+		cv2.imwrite('{}/{}_step{}_sim{}_c{}{}'.format(save_dir, target_name, self.hash_step, similarity, self.conversion*10000, target_ext),
 					converted_img)
 
 		return converted_img
