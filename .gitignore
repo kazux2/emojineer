@@ -5,21 +5,6 @@ __pycache__/*
 libs/__pycache__/*
 trash/*
 
-#data directory
-/data/*
-!/data/emoji_apple/
-/data/emoji_apple/*
-!/data/emoji_apple/.gitkeep
-
-!/data/whiten_emoji_apple/
-/data/whiten_emoji_apple/*
-!/data/whiten_emoji_apple/.gitkeep
-
-!/data/wemoji_num_dict.json
-!/data/num_wemoji_dict.json
-!/data/pickle_w1x1_hash_dicts_0_256_5
-!/data/pickle_w1x1_hash_dicts_0_256_20
-
 
 !.gitkeep
 
