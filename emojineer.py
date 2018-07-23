@@ -1,3 +1,8 @@
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
+sys.path.append(os.path.dirname(__file__))
 import cv2
 import json
 import os
@@ -33,9 +38,11 @@ class Emojineer():
 		with open(pickled_hash, 'rb') as f:
 			self.hash_dict = pickle.load(f)
 
-		self.whiten_emoji_path = 'data/whiten_emoji_apple'
+		cwd = os.path.dirname(__file__)
+		self.whiten_emoji_path = os.path.join(cwd, 'data/whiten_emoji_apple')
 		self.whiten_emoji_file_names = [f for f in listdir(self.whiten_emoji_path) if isfile(join(self.whiten_emoji_path, f))]
-		with open('data/whiten_emoji_1x1_rgb.json', 'r') as f:
+
+		with open(os.path.join(cwd,'data/whiten_emoji_1x1_rgb.json'), 'r') as f:
 			self.whiten_emoji_1x1_rgb = json.load(f)
 
 
@@ -74,7 +81,8 @@ class Emojineer():
 		'''
 		calc nearest emojis
 		'''
-		with open('data/num_wemoji_dict.json', 'r') as f:
+		cwd = os.path.dirname(__file__)
+		with open(os.path.join(cwd, 'data/num_wemoji_dict.json'), 'r') as f:
 			num_wemoji_dict = json.load(f)
 
 		nearest_emoji_name_lists = {}
@@ -158,11 +166,12 @@ class Emojineer():
 
 def emojineer(target_file_path, conversion, save_dir, save_name):
 
+	cwd = os.path.dirname(__file__)
 	emojineer = Emojineer(target_file_path=target_file_path,
 						  conversion=conversion,
 						  similarities=[0],
 						  hash_step=5,
-						  pickled_hash='data/pickle_w1x1_hash_dicts_0_256_5')
+						  pickled_hash=os.path.join(cwd, 'data/pickle_w1x1_hash_dicts_0_256_5'))
 
 	cut_target_img = emojineer.split_target_image()
 
