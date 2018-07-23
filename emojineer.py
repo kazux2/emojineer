@@ -11,14 +11,9 @@ from libs.rgbvalue_reduce_machine import RGBvalueReduceMachine
 
 class Emojineer():
 
-	def __init__(self, target_file_name, conversion, similarities, hash_step, pickled_hash):
-		self.dir_path = 'emojineer/target_img'
-		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/7-eleven_logo.png'
-		#self.dir_path = '/Users/saito/Documents/GitHub/emojineer/emojineer/target_img/okapi.jpg'
-		#self.dir_path = 'okapi.jpg'
-
-		self.target_file_name = target_file_name
-		self.target_img = cv2.imread('{}/{}'.format(self.dir_path, self.target_file_name)) # メソッド切り出してそこに直接ファイル名渡したい
+	def __init__(self, target_file_path, conversion, similarities, hash_step, pickled_hash):
+		self.target_file_path = target_file_path
+		self.target_img = cv2.imread(target_file_path) # メソッド切り出してそこに直接ファイル名渡したい
 		self.height, self.width = self.target_img.shape[:2]
 
 		if conversion == 0:
@@ -44,14 +39,14 @@ class Emojineer():
 			self.whiten_emoji_1x1_rgb = json.load(f)
 
 
-	def load_target_img(self, dir_path, target_file_name):
+	# def load_target_img(self, dir_path, target_file_name):
+	#
+	# 	loaded_img = cv2.imread('{}/{}'.format(dir_path, target_file_name))
+	#
+	# 	return loaded_img
 
-		loaded_img = cv2.imread('{}/{}'.format(dir_path, target_file_name))
 
-		return loaded_img
-
-
-	def split_target_image(self, target_img) -> list:
+	def split_target_image(self) -> list:
 		'''
 		cut target img
 		'''
@@ -65,7 +60,7 @@ class Emojineer():
 			for w in range(self.column):
 				c = w * self.convolution_resolution
 				c_ = (w + 1) * self.convolution_resolution
-				cut_piece = target_img[r:r_, c:c_]
+				cut_piece = self.target_img[r:r_, c:c_]
 				cut_piece_1x1 = cv2.resize(cut_piece, (1,1)) #ToDo ここ大地くんの方法適用
 				horizon_cut.append(cut_piece_1x1)
 
@@ -75,7 +70,7 @@ class Emojineer():
 
 
 
-	def find_nearest_emojis_with_pickled_hash(self, cut_target_img, target_file_name):
+	def find_nearest_emojis_with_pickled_hash(self, cut_target_img):
 		'''
 		calc nearest emojis
 		'''
@@ -84,7 +79,7 @@ class Emojineer():
 
 		nearest_emoji_name_lists = {}
 		for similarity in self.similarities:
-			nearest_emoji_name_lists[similarity] = []
+			nearest_emoji_name_lists[similarity] = [] #FIXME defaultdictを使えばここを省略できる
 
 		for h in range(self.raws):
 			horizon_emojis = {}
@@ -114,11 +109,13 @@ class Emojineer():
 			for similarity, horizon_emoji in horizon_emojis.items():
 				nearest_emoji_name_lists[similarity].append(horizon_emoji)
 
+		target_file_name = self.target_file_path # pathからfilenameだけ切り取って使いたいかも
+
 		return {target_file_name: [nearest_emoji_name_lists]}
 
 
 
-	def concatinate_emojis(self, nearest_emoji_name_list, similarity, save_dir, target_file_name):
+	def concatinate_emojis_and_save_image(self, nearest_emoji_name_list, similarity, save_dir, target_file_name):
 		'''
 		concatinate emojis
 		'''
@@ -142,48 +139,66 @@ class Emojineer():
 
 		converted_img = cv2.vconcat(vertical_imgs)
 		target_name, target_ext = os.path.splitext(target_file_name)
-		cv2.imwrite('{}/{}_step{}_sim{}_c{}{}'.format(save_dir, target_name, self.hash_step, similarity, self.conversion*10000, target_ext),
-					converted_img)
 
-		return converted_img
+		x = self.convolution_resolution * self.column
+		y = self.convolution_resolution * self.raws
+
+		resized_converted_img = cv2.resize(converted_img, (1080,int(1080*y/x)))
+		_conversion = "{0:04d}".format(int(self.conversion * 10000))
+		cv2.imwrite('{}/{}_step_{}_sim_{}_c_{}{}'.format(save_dir, target_name, self.hash_step, similarity, _conversion, target_ext),
+					resized_converted_img)
+
+		# cv2.imshow('converted_img_hash', converted_img_hash)
+		# cv2.waitKey(0)
+		# cv2.destroyAllWindows()
+
+		# return resized_converted_img
+
+
+
+def emojineer(target_file_path, conversion, save_dir, save_name):
+
+	emojineer = Emojineer(target_file_path=target_file_path,
+						  conversion=conversion,
+						  similarities=[0],
+						  hash_step=5,
+						  pickled_hash='data/pickle_w1x1_hash_dicts_0_256_5')
+
+	cut_target_img = emojineer.split_target_image()
+
+	nearest_emoji_names = emojineer.find_nearest_emojis_with_pickled_hash(cut_target_img)
+
+	# for emoji_name, list in nearest_emoji_names.items():
+	for list in nearest_emoji_names.values():
+		for obj in list:
+			for sim, nearest_emoji_name_list in obj.items():
+				emojineer.concatinate_emojis_and_save_image(nearest_emoji_name_list,
+														  similarity=sim,
+														  save_dir=save_dir,
+														  target_file_name=save_name)
+
+	print('saved')
 
 
 
 if __name__ == '__main__':
 
-	target_file_name = '7-eleven_logo.png'
-	# target_file_name = 'hokusai.jpg'
+	# conversions = [0.5, 0.1, 0.2, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.08, 0.075, 0.05, 0.04, 0.03, 0.025, 0.02, 0.017, 0.015, 0.013, 0.01] # 0 ~ 1
+	conversions = [0.1]
+	dir_path = 'target_img/hokusai'
+	file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
+	save_dir = 'outputs'
 
-	emojineer = Emojineer(target_file_name=target_file_name,
-						  conversion=0.02,
-						  similarities=[0],
-						  hash_step=5,
-						  pickled_hash='data/pickle_w1x1_hash_dicts_0_256_5')
+	for target_file_name in file_names:
+		if target_file_name == '.DS_Store':
+			continue
+		print("===========main for {}===========".format(target_file_name))
 
-
-	loaded_img = emojineer.load_target_img('emojineer/target_img', target_file_name)
-
-	cut_target_img = emojineer.split_target_image(loaded_img)
-
-	t1 = time.time()
-	nearest_emoji_name_lists_hash = emojineer.find_nearest_emojis_with_pickled_hash(cut_target_img, target_file_name)
-	t2 = time.time()
-
-	elapsed_time_hash = t2 - t1# pickledハッシュでの計算時間
-	print(f"pickledハッシュ処理時間：{elapsed_time_hash}")
+		for conversion in conversions:
+			target_file_path = dir_path + "/" + target_file_name
+			emojineer(target_file_path, conversion, save_dir, target_file_name)
 
 
-	for emoji_name, list in nearest_emoji_name_lists_hash.items():
-		for obj in list:
-			for sim, nearest_emoji_name_list in obj.items():
-				converted_img_hash = emojineer.concatinate_emojis(nearest_emoji_name_list,
-																  similarity=sim,
-																  save_dir='emojineer/converted_img/',
-																  target_file_name=target_file_name)
-
-	# cv2.imshow('converted_img_hash', converted_img_hash)
-	# cv2.waitKey(0)
-	# cv2.destroyAllWindows()
 
 
 

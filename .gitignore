@@ -23,12 +23,8 @@ trash/*
 
 !.gitkeep
 
-#emojineer directory
-/emojineer/*
-!/emojineer/calc_result/
-/emojineer/calc_result/*
-!/emojineer/calc_result/.gitkeep
+#outputs directory
+/outputs/*
 
-!/emojineer/target_img/
-/emojineer/target_img/*
-!/emojineer/target_img/7-eleven_logo.png
+#target_img directory
+/target_img/*
