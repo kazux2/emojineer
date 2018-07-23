@@ -25,6 +25,10 @@ trash/*
 
 #outputs directory
 /outputs/*
+!/outputs/.gitkeep
 
 #target_img directory
 /target_img/*
+!/target_img/.gitkeep
+
+
