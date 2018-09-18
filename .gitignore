@@ -17,3 +17,6 @@ trash/*
 !/target_img/.gitkeep
 
 
+#target_video directory
+/target_video/*
+!/target_video/.gitkeep

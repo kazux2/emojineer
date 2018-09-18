@@ -1,6 +1,9 @@
+
 from PIL import Image, ImageDraw
 from os import listdir
 from os.path import isfile, join
+
+# ディレクトリ配下の画像を集めてgifにするスクリプト
 
 tname = 'hokusai'
 dir_path = 'emojineer/target_img/{}'.format(tname)

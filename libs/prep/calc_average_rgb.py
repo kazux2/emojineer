@@ -35,7 +35,8 @@ import numpy as np
 from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 
 
-dir_path = 'data/whiten_emoji_apple'
+dir_path = '../../data/whiten_emoji_apple'
+
 
 file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
 print(file_names[0])
@@ -52,6 +53,7 @@ for file_name in file_names:
 
     # impplemented from Daichi/fix_color #18
     img_ave = np.zeros(3)
+    print(img_ave)
     img_ave[0] = np.sum(img[:, :, 0]) / (72 * 72)
     img_ave[1] = np.sum(img[:, :, 1]) / (72 * 72)
     img_ave[2] = np.sum(img[:, :, 2]) / (72 * 72)
