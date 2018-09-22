@@ -10,11 +10,11 @@ import cv2
 from os import listdir
 from os.path import isfile, join, splitext
 
-dir_path = 'data/emoji_apple'
-save_path = 'data/whiten_emoji_apple'
+dir_path = '../../data/notomoji128'
+save_path = '../../data/whiten_notomoji128'
 
 file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
-
+print(file_names)
 
 
 for file_name in file_names:

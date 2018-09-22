@@ -27,6 +27,15 @@ class W1x1RGBtoIdx(BaseModel):
     emoji_num = IntegerField()
 
 
+
+def making_rgb_to_emoji(rgb_key, emoji_distance_dict):
+    rgb_emoji = sorted(emoji_distance_dict.items(), key=itemgetter(1))[0][0]
+    print(rgb_emoji)
+
+    record_num, created = W1x1RGBtoEmojiname.get_or_create(rgb_value=int(rgb_key), emoji_file_name=rgb_emoji)
+    print(record_num, "th record created:", created)
+
+
 if __name__ == "__main__":
     db.connect()
     db.create_tables([NumtoWEmoji, W1x1RGBtoIdx])

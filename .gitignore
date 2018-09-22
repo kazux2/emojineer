@@ -5,8 +5,20 @@ __pycache__/*
 libs/__pycache__/*
 trash/*
 
-
 !.gitkeep
+
+data/apple/emoji_apple
+
+data/notomoji/notomoji128
+data/notomoji/hash_step5_type_all_emojis.pickle
+data/notomoji/hash_step10_type_all_emojis.pickle
+data/notomoji/hash_step20_type_all_emojis.pickle
+
+data/twemoji/twemoji72x72
+data/twemoji/hash_step5_type_all_emojis.pickle
+data/twemoji/hash_step10_type_all_emojis.pickle
+data/twemoji/hash_step20_type_all_emojis.pickle
+
 
 #outputs directory
 /outputs/*
@@ -15,7 +27,6 @@ trash/*
 #target_img directory
 /target_img/*
 !/target_img/.gitkeep
-
 
 #target_video directory
 /target_video/*
