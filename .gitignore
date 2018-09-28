@@ -9,12 +9,10 @@ trash/*
 
 data/apple/emoji_apple
 
-data/notomoji/notomoji128
 data/notomoji/hash_step5_type_all_emojis.pickle
 data/notomoji/hash_step10_type_all_emojis.pickle
 data/notomoji/hash_step20_type_all_emojis.pickle
 
-data/twemoji/twemoji72x72
 data/twemoji/hash_step5_type_all_emojis.pickle
 data/twemoji/hash_step10_type_all_emojis.pickle
 data/twemoji/hash_step20_type_all_emojis.pickle
