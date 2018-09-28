@@ -24,9 +24,6 @@ def show_image(cv2image_list):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-def imread_color(path):
-    return cv2.imread(path, cv2.IMREAD_COLOR)
-
 import cv2
 import json
 import pickle
@@ -36,13 +33,14 @@ import numpy as np
 from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 
 
-dir_path = '../../data/notomoji/whiten_notomoji128'
+dir_path = '../../data/twemoji/twemoji72x72'
+save_file_path = '../../data/twemoji/1x1_rgb.pickle'
 
 
 file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
 print(file_names[0])
 
-whiten_emoji_1x1_rgb_dict = {}
+emoji_1x1_rgb_dict = {}
 
 for file_name in file_names:
 
@@ -50,13 +48,15 @@ for file_name in file_names:
     if not ext in ['.png', '.jpeg', '.jpg']:
         continue
 
-    img = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_COLOR)
+    img = cv2.imread('{}/{}'.format(dir_path, file_name), cv2.IMREAD_UNCHANGED)
+
+    color_pixcel_num = np.sum(img[:,:,3] != 0)  # imgのうち、alpha(opacity)が0でないピクセル数
 
     # impplemented from Daichi/fix_color #18
     img_ave = np.zeros(3)
-    img_ave[0] = np.sum(img[:, :, 0]) / (72 * 72)
-    img_ave[1] = np.sum(img[:, :, 1]) / (72 * 72)
-    img_ave[2] = np.sum(img[:, :, 2]) / (72 * 72)
+    img_ave[0] = np.sum(img[:, :, 0]) / color_pixcel_num
+    img_ave[1] = np.sum(img[:, :, 1]) / color_pixcel_num
+    img_ave[2] = np.sum(img[:, :, 2]) / color_pixcel_num
 
     img_ave[0] = Decimal(str(img_ave[0])).quantize(Decimal('0'), rounding=ROUND_HALF_UP)
     img_ave[1] = Decimal(str(img_ave[1])).quantize(Decimal('0'), rounding=ROUND_HALF_UP)
@@ -65,11 +65,8 @@ for file_name in file_names:
     print(img_ave)
 
     # img_resized = cv2.resize(img, (1,1))
-    whiten_emoji_1x1_rgb_dict[file_name] = img_ave.tolist()
+    emoji_1x1_rgb_dict[file_name] = img_ave.tolist()
 
-# with open('../../data/whiten_twemoji_1x1_rgb.json', 'w') as f:
-#     json.dump(whiten_emoji_1x1_rgb_dict, f, indent=2)
-
-with open('../../data/notomoji/whiten_1x1_rgb.pickle', 'wb') as f:
-    pickle.dump(whiten_emoji_1x1_rgb_dict, f)
+with open(save_file_path, 'wb') as f:
+    pickle.dump(emoji_1x1_rgb_dict, f)
 
