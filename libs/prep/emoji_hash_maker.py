@@ -21,7 +21,7 @@ all_rgb = {
 
 all_rgb = {}
 
-step = 5
+step = 20
 for r in range(0, 256, step):
 	for g in range(0, 256, step):
 		for b in range(0, 256, step):
@@ -44,8 +44,8 @@ rgb_to_emojis = {
 '''
 
 # pardir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-with open('../../data/notomoji/whiten_1x1_rgb.pickle', 'rb') as f:
-	whiten_emoji_1x1_rgb = pickle.load(f)
+with open('../../data/twemoji/1x1_rgb.pickle', 'rb') as f:
+	emoji_1x1_rgb = pickle.load(f)
 
 
 top_num = 10  # THIS IS NOT STEP
@@ -62,7 +62,7 @@ for rgb_key, rgb_array in all_rgb.items():
 	rgb_ndarray = np.array(rgb_array)
 
 	emoji_distance_dict = {}
-	for emoji_name, emoji_rgb in whiten_emoji_1x1_rgb.items():
+	for emoji_name, emoji_rgb in emoji_1x1_rgb.items():
 		nd_emoji_rgb = np.array(emoji_rgb)
 
 		distance = (nd_emoji_rgb[0][0][0] - rgb_ndarray[0]) ** 2 \
@@ -91,9 +91,9 @@ for rgb_key, rgb_array in all_rgb.items():
 	rgb_to_all_emojis[rgb_key] = all_emojis
 
 
-with open('../../data/notomoji/hash_step{}_type_top{}_emojis.pickle'.format(step, top_num), 'wb') as f:
+with open('../../data/twemoji/hash/alpha/step{}_type_top{}_emojis.pickle'.format(step, top_num), 'wb') as f:
 	pickle.dump(rgb_to_top_emojis, f)
 
-with open('../../data/notomoji/hash_step{}_type_all_emojis.pickle'.format(step), 'wb') as f:
+with open('../../data/twemoji/hash/alpha/step{}_type_all_emojis.pickle'.format(step), 'wb') as f:
 	pickle.dump(rgb_to_all_emojis, f)
 
