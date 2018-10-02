@@ -3,8 +3,8 @@ import cv2
 from emojineer_video import emojineer
 
 
-file_name_base = "tower-to-earth_colored"
-cap = cv2.VideoCapture('/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/tower_to_earth/{}.mp4'.format(file_name_base))
+file_name_base = "penice"
+cap = cv2.VideoCapture('/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/{}.mp4'.format(file_name_base))
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # SEE: https://gist.github.com/takuma7/44f9ecb028ff00e2132e
 out = cv2.VideoWriter('{}_e.mp4'.format(file_name_base), fourcc, 15.0, (1080, 600))  # 毎回手動で変えなきゃいけない
@@ -18,14 +18,14 @@ while(cap.isOpened()):
 
     counter += 1
     ret, frame = cap.read()
-
-    duration = 15
-    start_conv = 0.07
-    end_conv = 0.01
-    conv_range = start_conv - end_conv
-    conv_diff = conv_range / duration
-
-    conv = start_conv - conv_diff*(counter%duration)
+    conv = 0.02
+    # duration = 15
+    # start_conv = 0.07
+    # end_conv = 0.01
+    # conv_range = start_conv - end_conv
+    # conv_diff = conv_range / duration
+	#
+    # conv = start_conv - conv_diff*(counter%duration)
     # conv = end_conv + conv_diff*(counter%duration)
 
     if ret:
