@@ -43,11 +43,11 @@ class Emojineer():
 			self.hash_dict = pickle.load(f)
 
 		cwd = os.path.dirname(__file__)
-		self.whiten_emoji_path = os.path.join(cwd, 'data/whiten_emoji_apple')
+		self.whiten_emoji_path = os.path.join(cwd, 'data/twemoji/whiten_twemoji72x72')
 		self.whiten_emoji_file_names = [f for f in listdir(self.whiten_emoji_path) if isfile(join(self.whiten_emoji_path, f))]
 
-		with open(os.path.join(cwd,'data/whiten_emoji_1x1_rgb.json'), 'r') as f:
-			self.whiten_emoji_1x1_rgb = json.load(f)
+		# with open(os.path.join(cwd,'data/whiten_emoji_1x1_rgb.json'), 'r') as f:
+		# 	self.whiten_emoji_1x1_rgb = json.load(f)
 
 
 	def split_target_image(self) -> list:
@@ -95,8 +95,8 @@ class Emojineer():
 		calc nearest emojis
 		'''
 		cwd = os.path.dirname(__file__)
-		with open(os.path.join(cwd, 'data/num_wemoji_dict.json'), 'r') as f:
-			num_wemoji_dict = json.load(f)
+		# with open(os.path.join(cwd, 'data/num_wemoji_dict.json'), 'r') as f:
+		# 	num_wemoji_dict = json.load(f)
 
 		nearest_emoji_name_lists = {}
 		for similarity in self.similarities:
@@ -126,7 +126,8 @@ class Emojineer():
 
 				for similarity in self.similarities:
 
-					horizon_emojis[similarity].append(num_wemoji_dict[str(w1x1_hash[similarity])])
+					# horizon_emojis[similarity].append(num_wemoji_dict[str(w1x1_hash[similarity])])
+					horizon_emojis[similarity].append(w1x1_hash[similarity])
 
 			for similarity, horizon_emoji in horizon_emojis.items():
 				nearest_emoji_name_lists[similarity].append(horizon_emoji)
@@ -154,6 +155,7 @@ class Emojineer():
 			for w in range(self.column):
 				img = cv2.imread('{}/{}'.format(self.whiten_emoji_path,
 												nearest_emoji_name_list[h][w]))
+
 				horison_imgs.append(img)
 
 			im_v = cv2.hconcat(horison_imgs)
@@ -167,6 +169,7 @@ class Emojineer():
 		x = self.convolution_resolution * self.column
 		y = self.convolution_resolution * self.raws
 
+		print(converted_img)
 		resized_converted_img = cv2.resize(converted_img, (1080,int(1080*y/x)))
 		# _conversion = "{0:04d}".format(int(self.conversion * 10000))
 
@@ -182,7 +185,7 @@ def emojineer(target_img, conversion):
 						  conversion=conversion,
 						  similarities=[0],
 						  hash_step=5,
-						  pickled_hash=os.path.join(cwd, 'data/pickle_w1x1_hash_dicts_0_256_5'))
+						  pickled_hash=os.path.join(cwd, 'data/twemoji/hash/whiten/step5_type_top10_emojis.pickle'))
 
 	cut_target_img = emojineer.split_target_image()
 
@@ -196,6 +199,7 @@ def emojineer(target_img, conversion):
 				# 										  similarity=sim,
 				# 										  save_dir=save_dir,
 				# 										  target_file_name=save_name)
+
 				return emojineer.concatinate_emojis(nearest_emoji_name_list)
 
 
@@ -217,10 +221,11 @@ if __name__ == '__main__':
 			# emojineer(target_file_path, conversion, save_dir, target_file_name)
 			target_img = cv2.imread(target_file_path)
 			img = emojineer(target_img, conversion)
-			cv2.imwrite('outputs/hokusai/02{}'.format(target_file_name),img)
+			# cv2.imshow("penice", img)
+			cv2.imwrite('outputs/hokusai/03{}'.format(target_file_name),img)
 
 
-			cv2.imwrite('{}/{}_step_{}_sim_{}_c_{}{}'.format(save_dir, target_name, self.hash_step, similarity, _conversion, target_ext), resized_converted_img)
+			# cv2.imwrite('{}/{}_step_{}_sim_{}_c_{}{}'.format(save_dir, target_name, self.hash_step, similarity, _conversion, target_ext), resized_converted_img)
 
 
 

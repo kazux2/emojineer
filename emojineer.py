@@ -32,7 +32,7 @@ class Emojineer():
 			self.hash_dict = pickle.load(f)
 
 		cwd = os.path.dirname(__file__)
-		self.whiten_emoji_path = os.path.join(cwd, 'data/twemoji/whiten_twemoji72x72')
+		self.whiten_emoji_path = os.path.join(cwd, 'data/twemoji/twemoji72x72')
 		self.whiten_emoji_file_names = [f for f in listdir(self.whiten_emoji_path) if isfile(join(self.whiten_emoji_path, f))]
 
 
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 	conversions = [0.02]
 	dir_path = 'target_img/hokusai'
 	file_names = [f for f in listdir(dir_path) if isfile(join(dir_path, f))]
-	save_dir = 'outputs/0922'
+	save_dir = 'outputs/0929'
 
 	from statistics import mean
 
@@ -189,7 +189,7 @@ if __name__ == '__main__':
 			# 		  'data/w_twemoji_hash_step20_type_top10_emojis.pickle', hash_step=20)
 
 			emojineer(target_file_path, conversion, save_dir, target_file_name,
-					  'data/twemoji/hash_step20_type_all_emojis.pickle', hash_step=20)
+					  'data/twemoji/hash/alpha/step20_type_top10_emojis.pickle', hash_step=20)
 
 
 

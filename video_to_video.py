@@ -4,7 +4,7 @@ from emojineer_video import emojineer
 
 
 file_name_base = "tower-to-earth_colored"
-cap = cv2.VideoCapture('target_video/{}.mp4'.format(file_name_base))
+cap = cv2.VideoCapture('/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/tower_to_earth/{}.mp4'.format(file_name_base))
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # SEE: https://gist.github.com/takuma7/44f9ecb028ff00e2132e
 out = cv2.VideoWriter('{}_e.mp4'.format(file_name_base), fourcc, 15.0, (1080, 600))  # 毎回手動で変えなきゃいけない
