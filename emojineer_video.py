@@ -26,11 +26,11 @@ class Emojineer():
 			conversion = 0.01
 
 		self.conversion = conversion
-		print("INFO:\t{{\"conversion\":{}}}".format(self.conversion))
+		# print("INFO:\t{{\"conversion\":{}}}".format(self.conversion))
 
 		self.convolution_resolution = round(min([self.height,self.width]) * conversion)
 
-		print("conversion resolution: ", self.convolution_resolution)
+		# print("conversion resolution: ", self.convolution_resolution)
 
 		self.raws = self.height // self.convolution_resolution
 		self.column = self.width // self.convolution_resolution
@@ -169,7 +169,7 @@ class Emojineer():
 		x = self.convolution_resolution * self.column
 		y = self.convolution_resolution * self.raws
 
-		print(converted_img)
+		# print(converted_img)
 		resized_converted_img = cv2.resize(converted_img, (1080,int(1080*y/x)))
 		# _conversion = "{0:04d}".format(int(self.conversion * 10000))
 
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 	for target_file_name in file_names:
 		if target_file_name == '.DS_Store':
 			continue
-		print("===========main for {}===========".format(target_file_name))
+		# print("===========main for {}===========".format(target_file_name))
 
 		for conversion in conversions:
 			target_file_path = dir_path + "/" + target_file_name
