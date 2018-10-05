@@ -169,12 +169,13 @@ class Emojineer():
 		x = self.convolution_resolution * self.column
 		y = self.convolution_resolution * self.raws
 
-		# print(converted_img)
-		resized_converted_img = cv2.resize(converted_img, (1080,int(1080*y/x)))
+		print("before resize converted_img.shape: ",converted_img.shape)
+		resized_converted_img = cv2.resize(converted_img, (1920,int(1920*y/x)))
 		# _conversion = "{0:04d}".format(int(self.conversion * 10000))
 
 
 		return resized_converted_img
+		# return converted_img
 
 
 

@@ -41,7 +41,7 @@ def emojinize_video(target_video_path, save_path, conv):
         if ret:
             frame = emojineer(frame, conv)
             # print(len(frame), len(frame[0]), len(frame[0][0]))  # 動画を変えたら確認
-            cv2.imshow('frame',frame)
+            # cv2.imshow('frame',frame)
             out.write(frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -60,24 +60,35 @@ def emojinize_video(target_video_path, save_path, conv):
 
 
 if __name__ == "__main__":
-    target_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped"
-    save_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped_converted"
+    file_name_base = "010ship.mp4"
+    target_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped/"
+    target_file_path = join(target_directory, file_name_base)
+    print("processing for: ", file_name_base)
+    save_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped_converted_highrez/"
+    save_file_path = join(save_directory, file_name_base)
+    # print(target_file_path, isfile(target_file_path))
+    conv = 0.05
+    print("conv:", conv)
+    emojinize_video(target_file_path, save_file_path, conv)
 
-
-    file_names = [f for f in listdir(target_directory) if isfile(join(target_directory, f))]
-
-    conv = 0.01
-
-    for file_name in file_names:
-        print("=== emojinize_video for {} ===".format(file_name))
-        root, ext = splitext(file_name)
-        if not ext in ['.mp4']:
-            continue
-
-        target_video_path = join(target_directory, file_name)
-        save_file_name = "{}_emoji_conv{}.mp4".format(file_name, conv)
-        save_path = join(save_directory, save_file_name)
-
-        emojinize_video(target_video_path, save_path, conv)
+    # target_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped"
+    # save_directory = "/Users/kazukiozone/privateKaihatsu/emoji/emojineer/target_video/2018summer_art_project/kai_premiere/cropped_converted"
+	#
+	#
+    # file_names = [f for f in listdir(target_directory) if isfile(join(target_directory, f))]
+	#
+    # conv = 0.008
+	#
+    # for file_name in file_names:
+    #     print("=== emojinize_video for {} ===".format(file_name))
+    #     root, ext = splitext(file_name)
+    #     if not ext in ['.mp4']:
+    #         continue
+	#
+    #     target_video_path = join(target_directory, file_name)
+    #     save_file_name = "{}_emoji_conv{}.mp4".format(file_name, conv)
+    #     save_path = join(save_directory, save_file_name)
+	#
+    #     emojinize_video(target_video_path, save_path, conv)
 
 
